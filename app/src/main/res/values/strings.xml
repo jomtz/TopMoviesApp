@@ -1,3 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TopMoviesApp</string>
+    <string name="app_name">Top Movies</string>
+
+    <string name="settings">Settings</string>
+    <string name="title_preferences">Movie Criteria</string>
+    <string name="dialog_title_preference">Choose your favorite option</string>
+
 </resources>
+
