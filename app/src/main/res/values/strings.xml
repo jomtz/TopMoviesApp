@@ -6,5 +6,11 @@
     <string name="title_preferences">Movie Criteria</string>
     <string name="dialog_title_preference">Choose your favorite option</string>
 
+    <!-- Details activity. -->
+    <string name="title">Original Title</string>
+    <string name="user_rating">User Rating</string>
+    <string name="release_date">Release Date</string>
+    <string name="plot_synopsis">Plot Synopsis</string>
+
 </resources>
 
