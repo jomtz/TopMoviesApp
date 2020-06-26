@@ -12,5 +12,8 @@
     <string name="release_date">Release Date</string>
     <string name="plot_synopsis">Plot Synopsis</string>
 
+    <!-- Menu-->
+    <string name="top_rated_movies">Top Movies</string>
+    <string name="popular_movies">Popular Movies</string>
 </resources>
 

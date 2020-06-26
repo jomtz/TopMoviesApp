@@ -44,22 +44,20 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.PosterViewHo
         return mNumberItems;
     }
 
-    class PosterViewHolder extends RecyclerView.ViewHolder{
-        ImageView listItemMoviePoster;
+    class PosterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+         private ImageView moviePosterImage;
 
         public PosterViewHolder (View itemView) {
             super(itemView);
-            listItemMoviePoster = itemView.findViewById(R.id.movie_poster);
+            moviePosterImage = itemView.findViewById(R.id.movie_poster);
+            itemView.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View v) {
+
+        }
     }
-
-
-
-
-
-
-
 
 
 }
