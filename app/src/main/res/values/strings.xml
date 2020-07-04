@@ -13,7 +13,7 @@
     <string name="plot_synopsis">Plot Synopsis</string>
 
     <!-- Menu-->
-    <string name="top_rated_movies">Top Movies</string>
-    <string name="popular_movies">Popular Movies</string>
+    <string name="top_rated_movies">Top rated movies</string>
+    <string name="most_popular_movies">Most popular movies</string>
 </resources>
 

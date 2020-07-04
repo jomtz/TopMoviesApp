@@ -2,8 +2,7 @@ package com.josmartinez.topmoviesapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.Preference;
-import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -18,14 +17,25 @@ import com.josmartinez.topmoviesapp.MovieAdapter.PosterViewHolder;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView mainRecyclerView;
+    private RecyclerView mRecyclerView;
+    //private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mainRecyclerView = findViewById(R.id.rv_movies);
+        mRecyclerView = findViewById(R.id.rv_movies);
+        mRecyclerView.setHasFixedSize(true);
+
+        //Use of grid layout manager
+        mLayoutManager = new GridLayoutManager(this, 2);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        //Specification of adapter
+        //mAdapter = new MovieAdapter(movieData);
+        //mRecyclerView.setAdapter(mAdapter);
     }
 
 
@@ -39,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
+        int itemThatWasClickedId = item.getItemId();
 
         return super.onOptionsItemSelected(item);
     }

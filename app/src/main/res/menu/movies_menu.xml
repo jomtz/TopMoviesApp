@@ -4,7 +4,7 @@
     <item
         android:id="@+id/popular_movies"
         android:orderInCategory="1"
-        android:title="@string/popular_movies"
+        android:title="@string/most_popular_movies"
         app:showAsAction="collapseActionView" />
 
     <item
