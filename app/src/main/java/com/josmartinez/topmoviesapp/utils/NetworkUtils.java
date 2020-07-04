@@ -18,14 +18,14 @@ public class NetworkUtils {
 
     public static final String MOVIES_BASE_URL = "http://api.themoviedb.org/3";
     public static final String TOP_RATED_MOVIES = "movie/top_rated";
-    public static final String POPULAR_MOVIES = "movie/popular";
+    public static final String MOST_POPULAR_MOVIES = "movie/popular";
     private static final String API_KEY = "api_key";
     private static final String TAG = "NetworkUtils";
     private static String API_VALUE;
 
-    public static URL buildUrl(String querySegment, Context apiValue){
+    public static URL buildUrl(String querySegment, Context context){
 
-        API_VALUE = apiValue.getString(R.string.the_movie_db_api_key);
+        API_VALUE = context.getString(R.string.the_movie_db_api_key);
 
         Uri builtUri = Uri.parse(MOVIES_BASE_URL)
                 .buildUpon()
@@ -62,5 +62,6 @@ public class NetworkUtils {
 
         finally { urlConnection.disconnect(); }
     }
+
 
 }
