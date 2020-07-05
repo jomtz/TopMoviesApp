@@ -5,46 +5,75 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Adapter;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.josmartinez.topmoviesapp.MovieAdapter.PosterViewHolder;
+import com.josmartinez.topmoviesapp.utils.JSONUtils;
 import com.josmartinez.topmoviesapp.utils.NetworkUtils;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieAdapter.ListItemClickListener{
 
-    private RecyclerView mRecyclerView;
-    //private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView mMovieList;
+    private ArrayList<Poster> posters;
+    private TextView mErrorMessageDisplay;
+    private ProgressBar mLoadingIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mRecyclerView = findViewById(R.id.rv_movies);
-        mRecyclerView.setHasFixedSize(true);
+        mMovieList = findViewById(R.id.rv_movies);
+
+        mMovieList.setHasFixedSize(true);
+        mErrorMessageDisplay = findViewById(R.id.error_message);
+        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
 
         //Use of grid layout manager
-        mLayoutManager = new GridLayoutManager(this, 2);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
+        mMovieList.setLayoutManager(mLayoutManager);
+
 
         //Specification of adapter
-        //mAdapter = new MovieAdapter(movieData);
-        //mRecyclerView.setAdapter(mAdapter);
+        populateMovies(posters);
     }
 
+    @Override
+    public void onListItemClick(int clickedItemIndex) {
+        //Write intent
+    }
+
+    private void populateMovies(List<Poster> posterList){
+        showMoviesListView();
+        this.posters = new ArrayList<>(posterList);
+        MovieAdapter mAdapter = new MovieAdapter(posters, MainActivity.this);
+        mMovieList.setAdapter(mAdapter);
+    }
+
+
+    private void showMoviesListView(){
+        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
+        mMovieList.setVisibility(View.VISIBLE);
+    }
+
+    private void showErrorMessage(){
+        mMovieList.setVisibility(View.INVISIBLE);
+        mErrorMessageDisplay.setVisibility(View.VISIBLE);
+    }
 
 
     @Override
@@ -79,34 +108,40 @@ public class MainActivity extends AppCompatActivity {
 
     private void makeHttpRequest(String startHttpRequest) {
 
-        URL githubSearchUrl = NetworkUtils.buildUrl(startHttpRequest, getApplicationContext());
-        new MoviesBackgroundTask().execute(githubSearchUrl);
+        URL movieSearchUrl = NetworkUtils.buildUrl(startHttpRequest, getApplicationContext());
+        new MoviesBackgroundTask().execute(movieSearchUrl);
 
     }
 
 
+
+
+    @SuppressLint("StaticFieldLeak")
     public class MoviesBackgroundTask extends AsyncTask<URL, Void, String> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            mLoadingIndicator.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected String doInBackground(URL... urls) {
             URL searchUrl = urls[0];
-            String moviesSearchResults = null;
-            try {
-                moviesSearchResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-            return moviesSearchResults;
+            return NetworkUtils.getResponseFromHttpUrl(searchUrl);
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
+        protected void onPostExecute(String r) {
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            if (r != null && !r.isEmpty()){
+                showMoviesListView();
+                ArrayList<Poster> posters = JSONUtils.parseJson(r);
+                populateMovies(posters);
+            } else{
+                showErrorMessage();
+            }
+            super.onPostExecute(r);
         }
     }
 

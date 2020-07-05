@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -11,50 +13,48 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+
+import java.util.List;
+
+
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.PosterViewHolder> {
 
-    private static final String TAG = MovieAdapter.class.getSimpleName();
-    private ListItemClickListener movieClickListener;
-    private int numberOfPosters;
+    private final List<Poster> mMovies;
+    private final ListItemClickListener mMovieClickListener;
 
-    public interface ListItemClickListener {
-        void onListItemClick(int clickedItemIndex);
+    MovieAdapter(List<Poster> posters, ListItemClickListener listener) {
+        this.mMovies = posters;
+        this.mMovieClickListener = listener;
     }
 
-
-
-    public MovieAdapter(int numberOfPosters, ListItemClickListener movieClickListener){
-        this.movieClickListener = movieClickListener;
-        this.numberOfPosters = numberOfPosters;
-    }
 
     @NonNull
     @Override
     public PosterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        Context context = viewGroup.getContext();
-        int layoutIdForListItem = R.layout.movie_list_item;
-        LayoutInflater inflater = LayoutInflater.from(context);
+        FrameLayout inflater = (FrameLayout) LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.movie_list_item,viewGroup, false);
 
-        View view = inflater.inflate(layoutIdForListItem, viewGroup, false);
-
-        return new PosterViewHolder(view);
+        return new PosterViewHolder(inflater);
     }
 
     @Override
     public void onBindViewHolder(@NonNull PosterViewHolder holder, int position) {
-
+        Poster poster = mMovies.get(position);
+        Picasso.get().load(poster.getPosterPath()).fit().into(holder.listItemPosterView);
 
     }
 
     @Override
     public int getItemCount() {
-        return numberOfPosters;
+        return  mMovies == null ? 0 : mMovies.size();
     }
 
 
-    class PosterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    //ViewHolder for MovieAdapter
 
-        private final ImageView listItemPosterView;
+    class PosterViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener{
+
+        ImageView listItemPosterView;
 
         PosterViewHolder(View itemView) {
             super(itemView);
@@ -66,10 +66,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.PosterViewHo
         @Override
         public void onClick(View v) {
             int clickedPosition = getAdapterPosition();
-            movieClickListener.onListItemClick(clickedPosition);
+            mMovieClickListener.onListItemClick(clickedPosition);
         }
+
     }
 
+    public interface ListItemClickListener {
+        void onListItemClick(int clickedItemIndex);
+    }
 
 
 }

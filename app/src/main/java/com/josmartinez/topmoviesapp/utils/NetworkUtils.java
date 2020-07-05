@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.josmartinez.topmoviesapp.R;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -44,24 +45,26 @@ public class NetworkUtils {
         return url;
     }
 
-    public static String getResponseFromHttpUrl(URL url) throws IOException {
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+    public static String getResponseFromHttpUrl(URL url) {
+
+        HttpURLConnection urlConnection = null;
 
         try {
-            InputStream in = urlConnection.getInputStream();
-            Scanner scanner = new Scanner(in);
-            scanner.useDelimiter("\\A");
+            urlConnection = (HttpURLConnection) url.openConnection();
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            return scanner(in);
+        } catch (IOException e) {
+            Log.e(TAG, "fecthData: ", e);
+        } finally {
+            urlConnection.disconnect();
+        }
+        return null;
 
-            boolean hasInput = scanner.hasNext();
-                if (hasInput) {
-                    return scanner.next();
-                } else {
-                    return null;
-                }
-            }
 
-        finally { urlConnection.disconnect(); }
     }
-
+    private static String scanner(InputStream in) {
+        Scanner s = new Scanner(in).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : null;
+    }
 
 }

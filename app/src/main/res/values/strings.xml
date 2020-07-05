@@ -15,5 +15,8 @@
     <!-- Menu-->
     <string name="top_rated_movies">Top rated movies</string>
     <string name="most_popular_movies">Most popular movies</string>
+
+    <!-- Error-->
+    <string name="error_message">Failed to get results, please try again.</string>
 </resources>
 
